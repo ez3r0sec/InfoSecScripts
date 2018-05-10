@@ -2,4 +2,4 @@
 
 GNU utils
 
-See also: macSec/collectObjSeeHashes.sh
+See also: MacSecScripts/collectObjSeeHashes.sh
