@@ -22,6 +22,7 @@ function hash_file {
     fi
 }
 
+### SCRIPT
 cd "$hashDir"
 ls -1 >> $dirContents
 echo "$hashDir" >> $hashStore
