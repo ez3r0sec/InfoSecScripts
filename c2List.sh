@@ -1,10 +1,9 @@
 #!/bin/bash
-######################################
 # c2List.sh
 # get c2 list from Bambenek Consulting
-# Last Edited: 2/28/18 Julian Thies
-######################################
-# variables
+# Last Edited: 5/11/18 Julian Thies
+
+### VARIABLES
 userName="$(id -un)"
 starDate="$(date +%y-%m-%d)"
 
@@ -23,8 +22,7 @@ sedIPFile="/tmp/sedIPs.txt"
 domFile="C2-Domains.txt"
 IPFile="C2-IPs.txt"
 
-######################################
-# script
+### SCRIPT
 if [ -e "$outDir" ] ; then
     if [ -e "$outFileDir" ] ; then
 	echo
@@ -67,4 +65,3 @@ do
 done
 
 exit
-######################################
