@@ -3,10 +3,12 @@
 # collect the Alexa top 50 websites
 # Last Edited: 5/11/18 Julian Thies
 
+### VARIABLES
 userName="$(id -un)"
 URL="https://www.alexa.com/topsites"
 destFile="/home/$userName/Desktop/topSites.txt"
 
+### SCRIPT
 curl -s "$URL" | grep '<a href="/siteinfo/' | while read line
 do
     # first round of processing	
