@@ -1,5 +1,7 @@
 #!/bin/bash
+# curlTop50.sh
 # collect the Alexa top 50 websites
+# Last Edited: 5/11/18 Julian Thies
 
 userName="$(id -un)"
 URL="https://www.alexa.com/topsites"
