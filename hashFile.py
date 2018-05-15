@@ -1,11 +1,14 @@
 #!/usr/bin/python
-# hash a file using python
-# pass in the file as param 1
+# hashFile.py
+# pass in the target file as param 1
+# Last Edited: 5/11/18 Julian Thies
 
+### IMPORTS
 import os.path
 import hashlib
 import sys
 
+### FUNCTIONS
 def hash_file(filename):
      if os.path.exists(filename):
           bufferSize = 65536
@@ -29,5 +32,6 @@ def hash_file(filename):
      else:
           print(filename + " does not exist")
 
+### SCRIPT
 arg = sys.argv[1]
 hash_file(arg)
