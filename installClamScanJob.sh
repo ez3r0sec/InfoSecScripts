@@ -1,6 +1,7 @@
 #!/bin/bash
+# installClamScanJob.sh
 # install clamscan job for ubuntu/debian fileshares
-# Last Edited: 12/17/17 Julian Thies
+# Last Edited: 5/11/18 Julian Thies
 
 # check if ClamAV is already installed
 if [ -e /usr/bin/clamscan ] ; then
@@ -20,7 +21,7 @@ else
     fi
 fi
 
-# variables
+### VARIABLES
 jobName="/tmp/ClamScanJob"
 scriptName="/tmp/clamScanJob.sh"
 scanString="sudo /usr/bin/clamscan -r $targetDir | grep -v 'OK' | grep -v 'Empty file' 1>> $logFile "
