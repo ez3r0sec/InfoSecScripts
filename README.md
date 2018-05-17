@@ -1,4 +1,4 @@
-# InfoSec
+# InfoSecScripts
 
 GNU utils
 
