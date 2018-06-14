@@ -31,3 +31,5 @@ function dl_list (){
 dl_list "$overallDomList"
 dl_list "$overallIPList"
 dl_list "$overallURLList"
+
+rm /tmp/$starDate-ransomware*
