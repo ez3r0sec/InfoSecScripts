@@ -1,7 +1,7 @@
 #!/bin/bash
 # hashDirContents.sh
 # hash all files in directory ($1)
-# Last Edited: 5/11/18 Julian Thies
+# Last Edited: 6/16/18 Julian Thies
 
 ### VARIABLES
 userName="$(id -un)"
@@ -15,7 +15,7 @@ function hash_file {
         echo "$line is a directory"
     else
         echo "$line" >> $hashStore
-        echo "md5    --> $(md5 $hashFile | awk '{print $4}')" >> $hashStore
+        echo "md5    --> $(md5sum $hashFile | awk '{print $4}')" >> $hashStore
         echo "sha1   --> $(shasum $hashFile | awk '{print $1}')" >> $hashStore
         echo "sha256 --> $(shasum -a 256 $hashFile | awk '{print $1}')" >> $hashStore
         echo >> $hashStore
