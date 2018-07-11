@@ -1,7 +1,7 @@
 #!/bin/bash
 # requestFileInfo.sh
 # collect information about a specified file (Linux)
-# Last Edited: 7/2/18 Julian Thies
+# Last Edited: 7/11/18 Julian Thies
 
 ### VARIABLES
 suspFile="$1"
