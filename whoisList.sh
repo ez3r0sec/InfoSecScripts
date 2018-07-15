@@ -1,6 +1,6 @@
 #!/bin/bash
 # whoisList.sh
-# get the geolocation and reg info for ips
+# get the geolocation and reg info for ips and output to CSV
 # Last Edited: 7/15/18 Julian Thies
 
 ### VARIABLES
