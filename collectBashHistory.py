@@ -11,6 +11,12 @@ import shutil
 destDir = os.path.join("/usr/local/", str(os.uname()[1] + "_bh")
 
 ### FUNCTIONS
+def mk_dir(dir):
+	if not os.path.exists(dir):
+		os.mkdir(dir)
+	else:
+		pass
+                       
 def find_hist(path, dest):
     if os.path.exists(path):
         for path, dir, files in os.walk(path):
@@ -31,4 +37,5 @@ def find_hist(path, dest):
         pass
                                                                                 
 ### SCRIPT
+mk_dir(destDir)
 find_hist("/", destDir)
