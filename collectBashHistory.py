@@ -16,7 +16,7 @@ def mk_dir(dir):
 		os.mkdir(dir)
 	else:
 		pass
-                       
+                
 def find_hist(path, dest):
     if os.path.exists(path):
         for path, dir, files in os.walk(path):
