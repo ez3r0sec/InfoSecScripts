@@ -1,3 +1,4 @@
-# InfoSecScripts
+# ThreatInfo
+Scripts to collect IOCs from reputable sources using Linux
 
-GNU utils
+See also: MacSecScripts/collectObjSeeHashes.sh
