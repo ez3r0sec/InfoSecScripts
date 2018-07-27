@@ -1,0 +1,16 @@
+http
+ftp
+file://
+sftp
+.dll
+.exe
+.txt
+.html
+method
+obj
+object
+var
+upx
+DOS mode
+inject
+encrypt
