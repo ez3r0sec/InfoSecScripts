@@ -22,9 +22,6 @@ function clean_up {
 	if [ -e "$tmpFile" ] ; then
 		rm "$tmpFile"
 	fi
-	if [ -e "$listFile" ] ; then
-		rm "$listFile"
-	fi
 }
 
 ### SCRIPT
