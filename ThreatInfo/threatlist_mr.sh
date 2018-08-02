@@ -14,10 +14,6 @@ function dl_list {
 	curl -o "$tmpFile" "$URL"
 }
 
-function process_list {
-	grep -v "#" "$tmpFile" >> "$listFile"
-}
-
 function clean_up {
 	if [ -e "$tmpFile" ] ; then
 		rm "$tmpFile"
@@ -26,5 +22,4 @@ function clean_up {
 
 ### SCRIPT
 dl_list
-process_list
 clean_up
