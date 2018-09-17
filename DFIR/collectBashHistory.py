@@ -25,7 +25,7 @@ def find_hist(path, dest):
 					fp = os.path.join(path, file)
 					fpString = list(fp)
 					# take filepath and replace "/" with "_" to name the destination file
-					for i in range(len(fpString))
+					for i in range(len(fpString)):
 						if fpString[i] == "/":
 							fpString[i] = "_"
 					name = "".join(fpString)
