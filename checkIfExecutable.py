@@ -20,15 +20,22 @@ def checkExecutable(file):
 		permissions = oct(os.stat(file)[0])[-3:]
 		# separate the digits
 		perm_split = list(permissions)
+		count = 0
 		for i in range(len(perm_split)):
 			if int(perm_split[i]) in possible_permissions:
-				print(True)
+				count = count + 1
 				# exit right away if the file is deemed executable
 				exit()
 			else:
-				print(False)
+				pass
+	
+		if count > 0:
+			print(True)
+		else:
+			print(False)
 	else:
 		print(file + " does not exist!")
 
 ### SCRIPT
 checkExecutable(arg)
+
