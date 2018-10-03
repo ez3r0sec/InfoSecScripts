@@ -24,8 +24,6 @@ def checkExecutable(file):
 		for i in range(len(perm_split)):
 			if int(perm_split[i]) in possible_permissions:
 				count = count + 1
-				# exit right away if the file is deemed executable
-				exit()
 			else:
 				pass
 	
