@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # collectBashHist.py
-# collect all bash_history on a system for analysis (Python 2.7)
-# Last Edited: 7/23/18
+# collect all bash_history and sh_history on a system for analysis (Python 2.7)
+# Last Edited: 10/16/18
 
 ### IMPORT
 import os
@@ -21,7 +21,7 @@ def find_hist(path, dest):
 	if os.path.exists(path):
 		for path, dir, files in os.walk(path):
 			for file in files:
-				if file.endswith('bash_history'):
+				if file.endswith('bash_history') or file.endswith('sh_history'):
 					fp = os.path.join(path, file)
 					fpString = list(fp)
 					# take filepath and replace "/" with "_" to name the destination file
