@@ -8,7 +8,7 @@ import os
 import shutil
 
 ### VARIABLES
-destDir = os.path.join("/usr/local/", str(os.uname()[1] + "_bh")
+destDir = os.path.join("/usr/local/", str(os.uname()[1] + "_bh"))
 
 ### FUNCTIONS
 def mk_dir(dir):
