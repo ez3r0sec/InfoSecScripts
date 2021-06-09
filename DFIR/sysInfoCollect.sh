@@ -1,7 +1,7 @@
 #!/bin/bash
 # sysInfoCollect.sh
 # basic live system information gathering for linux
-# Last Edited: 6/19/18 Julian Thies
+# Last Edited: 3/5/2021 Julian Thies
 
 ##### variables
 starDate="$(date)"
@@ -265,27 +265,27 @@ function survey_dirs {
 	echo "Collecting the contents of certain directories"
 	destFile="$destDir/sysInfoResults.txt"
 	sect_head "DIRECTORY INFO"
-    ### contents of certain dirs
-    # ls -lapsSFT #s_ize, S_ort by size, F classify by filetype (exe, etc.), display time info
-    # /tmp
-    echo "===== ls -lapsSFt /tmp" >> "$destFile"
-    ls -lapsSFt /tmp >> "$destFile"
-    echo >> "$destFile"
-    # /var/tmp
-    echo "===== ls -lapsSFt /var/tmp" >> "$destFile"
-    ls -lapsSFt /var/tmp >> "$destFile"
-    echo >> "$destFile"
-    # /dev
-    echo "===== ls -lapsSFt /dev" >> "$destFile"
-    ls -lapsSFt /dev >> "$destFile"
-    echo >> "$destFile"
-    # /var/spool/cron
-    echo "===== ls -lapsSFt /var/spool/cron" >> "$destFile"
-    ls -lapsSFt /var/spool/cron >> "$destFile"
-    echo >> "$destFile"
-    # /etc/cron.d
-    echo "===== ls -lapsSFt /etc/cron.d" >> "$destFile"
-    ls -lapsSFt /etc/cron.d >> "$destFile"
+	### contents of certain dirs
+    	# ls -lapsSFT #s_ize, S_ort by size, F classify by filetype (exe, etc.), display time info
+    	# /tmp
+    	echo "===== ls -lapsSFt /tmp" >> "$destFile"
+    	ls -lapsSFt /tmp >> "$destFile"
+    	echo >> "$destFile"
+    	# /var/tmp
+    	echo "===== ls -lapsSFt /var/tmp" >> "$destFile"
+    	ls -lapsSFt /var/tmp >> "$destFile"
+    	echo >> "$destFile"
+    	# /dev
+    	echo "===== ls -lapsSFt /dev" >> "$destFile"
+    	ls -lapsSFt /dev >> "$destFile"
+    	echo >> "$destFile"
+    	# /var/spool/cron
+    	echo "===== ls -lapsSFt /var/spool/cron" >> "$destFile"
+    	ls -lapsSFt /var/spool/cron >> "$destFile"
+    	echo >> "$destFile"
+    	# /etc/cron.d
+   	 echo "===== ls -lapsSFt /etc/cron.d" >> "$destFile"
+    	ls -lapsSFt /etc/cron.d >> "$destFile"
 	space
 }
 
@@ -327,10 +327,12 @@ function user_ops {
     echo >> "$destFile"
     # all valid past logins
     echo "===== utmpdump wtmp (All successful past logins)" >> "$destFile"
+    
     if [ -e "/var/log/wtmp" ] ; then
         utmpdump /var/log/wtmp >> "$destFile" 2>> /dev/null
         echo >> "$destFile"
     fi
+    
     # all bad logins
     echo "===== utmpdump btmp (All bad logins)" >> "$destFile"
     if [ -e "/var/log/btmp" ] ; then
@@ -347,6 +349,7 @@ function ssh_info {
 	# find the IPs of systems that the system has attempted to ssh to
 	echo "===== hosts the system has ssh'ed to" >> "$destFile"
 	find / -name 'known_hosts' >> "/tmp/sshHosts.txt"
+	
 	if [ -e "/tmp/sshHosts.txt" ] ; then
 		cat "/tmp/sshHosts.txt" | while read line
 		do
@@ -363,17 +366,17 @@ function log_ops {
 	echo "Collecting logs"
 	destFile="$destDir/sysInfoResults.txt"
 	sect_head "SYSTEM LOG INFO"
-    ### survey the /var/log directory
-    # sort by smallest to largest log file
-    echo "===== ls -lap /var/log" >> "$destFile"
-    ls -lap /var/log | sort -n -k 5,5 >> "$destFile"
-    echo >> "$destFile"
+    	### survey the /var/log directory
+    	# sort by smallest to largest log file
+    	echo "===== ls -lap /var/log" >> "$destFile"
+    	ls -lap /var/log | sort -n -k 5,5 >> "$destFile"
+    	echo >> "$destFile"
 
-    if [ -e "$destDir/var-log" ] ; then
-        rm -r "$destDir/var-log"
+    	if [ -e "$destDir/var-log" ] ; then
+        	rm -r "$destDir/var-log"
 		mkdir "$destDir/var-log"
-        cp -r /var/log/* "$destDir/var-log"
-    else
+        	cp -r /var/log/* "$destDir/var-log"
+    	else
         mkdir "$destDir/var-log"
         cp -r /var/log/* "$destDir/var-log"
     fi
