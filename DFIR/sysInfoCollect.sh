@@ -17,8 +17,8 @@ param1="$1"
 
 ##### functions
 function space {
-    echo "-----------------------------------------" >> "$destFile"
-    echo >> "$destFile"
+	echo "-----------------------------------------" >> "$destFile"
+	echo >> "$destFile"
 }
 
 function sect_head () {
