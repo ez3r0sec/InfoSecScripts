@@ -3,6 +3,8 @@
 # collect information about a specified file (Linux)
 # Last Edited: 06/10/2021 Julian Thies
 # 
+# use to get information about a suspicious file on a Linux system
+# tested on Ubuntu
 # 
 # User will have to decide how to get the tar.gz off of the system
 
@@ -39,6 +41,27 @@ function check_user {
 	if [ "$(whoami)" != "root" ] ; then
 		echo "Must be run with root privileges"
 		exit
+	fi
+}
+
+function mk_results_dir () {
+	# make our results directory if we need to
+	if [ ! -d $resultsDir ] ; then
+		mkdir "$resultsDir"
+	fi
+
+	# check if the file is still there
+	if [ ! -e "$1" ] ; then
+		echo "$1"
+		echo "Error: No file submitted"
+		exit
+	else
+		if [ -e "$1" ] ; then
+			echo "Gathering file information"
+		else
+			echo "Requested file does not exist"
+			exit
+		fi
 	fi
 }
 
@@ -175,6 +198,47 @@ function cp_syslog {
 	space
 }
 
+function cp_ufw_log {
+	section_header "UFW COLLECTION"
+	
+	if [ -f /var/log/ufw.log ] ; then
+		echo "UFW Log found in /var/log, copying"
+		
+		# if ufw conf file exists, grab some info from it
+		if [ -f /etc/ufw/ufw.conf ] ; then
+			echo "UFW: $(cat /etc/ufw/ufw.conf | grep "ENABLED")" >> "$destFile"
+			echo "UFW: $(cat /etc/ufw/ufw.conf | grep "LOGLEVEL")" >> "$destFile"
+		else
+			echo "Error: UFW conf file /etc/ufw.ufw.conf does not exist" >> "$destFile"
+		fi
+		
+		# if the uwf.log is already in the results directory, just copy ufw.log and not the additional archives of logs
+		if [ -f "$resultsDir/uwf.log" ] ; then
+			cp /var/log/ufw.log "$resultsDir"
+		else
+			cp /var/log/ufw.log* "$resultsDir"
+		fi
+	else
+		echo "UFW Log not found" >> "$destFile"
+	fi
+	space
+}
+
+function cp_auth_log {
+	section_header "AUTH.LOG COLLECTION"
+
+	if [ -f /var/log/auth.log ] ; then
+		if [ -f "$resultsDir/auth.log" ] ; then
+			cp /var/log/auth.log "$resultsDir"
+		else
+			cp /var/log/auth.log* "$resultsDir"
+		fi
+	else
+		echo "Error: auth.log not found in /var/log" >> "$destFile"
+	fi
+	space
+}
+
 function tar_results {
 	section_header "TAR CREATION"
 	echo "Generating tar.gz archive of results"
@@ -187,24 +251,7 @@ function tar_results {
 declare_script
 check_user
 
-# make our results directory if we need to
-if [ ! -d $resultsDir ] ; then
-	mkdir "$resultsDir"
-fi
-
-# check if the file is still there
-if [ ! -e "$1" ] ; then
-	echo "$1"
-	echo "Error: No file submitted"
-	exit
-else
-	if [ -e "$1" ] ; then
-		echo "Gathering file information"
-	else
-		echo "Requested file does not exist"
-		exit
-	fi
-fi
+mk_results_dir "$1"
 
 # file ops on requested file
 file_header
@@ -221,5 +268,10 @@ recent_logins
 process_list
 cp_bash_history
 cp_syslog
+cp_ufw_log
+cp_auth_log
 tar_results
+
+echo
+echo "Information collection complete!"
 
