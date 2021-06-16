@@ -44,6 +44,15 @@ function check_user {
 	fi
 }
 
+function check_sus_file_exists () {
+	if [ -e "$1" ] ; then
+		echo "$1 exists, proceeding with data collection"
+	else
+		echo "$1 does not exist, exiting"
+		exit
+	fi
+}
+
 function mk_results_dir () {
 	# make our results directory if we need to
 	if [ ! -d $resultsDir ] ; then
@@ -135,15 +144,87 @@ function recent_logins {
 	space
 }
 
-function cp_bash_history {
-	section_header "BASH HISTORY"
-	echo "Review Bash History files in bh directory" >> "$destFile"
+function root_bash_history {
+	section_header "SHELL HISTORY"
+	
+	# cp root bash history if it exists
+	if [ -f /root/.bash_history ] ; then
+		echo "Copying /root/.bash_history to $bhDir/BASH_HISTORY_root.txt"
+		cp /root/.bash_history "$bhDir/BASH_HISTORY_root.txt"
+	else
+		echo "No Root Bash History" >> "$destFile"
+	fi	
+	space
+}
 
+# called by loop_home_dirs
+function cp_shell_history () {
 	# get all potential bash history files
 	if [ ! -d "$bhDir" ] ; then
 		mkdir "$bhDir"
 	fi
+
+	# parse our function input
+	homeDir="$1"
 	
+	# transform name of home dir - replace "/" with "_"
+	homeDirSlashReplace="$(echo "$homeDir" | sed -r 's/[/]+/_/g')"
+		
+	### BASH 
+	if [ -f "$homeDir/.bash_history" ] ; then
+		echo "Copying $homeDir/.bash_history to $bhDir" >> "$destFile"
+			
+		# define name of dest file
+		BHName="BASH_HISTORY$homeDirSlashReplace.txt"
+			
+		# copy to the new file in the RequestResults directory
+		cp "$homeDir/.bash_history" "$bhDir/$BHName"
+	else
+		echo "$homeDir/.bash_history not found" >> "$destFile"
+	fi
+		
+	### PYTHON collect python history
+	if [ -f "$homeDir/.python_history" ] ; then
+		echo "Copying $homeDir/.python_history to $bhDir" >> "$destFile"
+			
+		PHName="PYTHON_HISTORY$homeDirSlashReplace.txt"
+			
+		cp "$homeDir/.python_history" "$bhDir/$PHName"
+	else
+		echo "$homeDir/.python_history not found" >> "$destFile"
+	fi
+		
+	### SQLITE collect sqlite history if present
+	if [ -f "$homeDir/.sqlite_history" ] ; then
+		echo "Copying $homeDir/.sqlite_history to $bhDir" >> "$destFile"
+			
+		SqHName="SQLITE_HISTORY$homeDirSlashReplace.txt"
+			
+		cp "$homeDir/.sqlite_history" "$bhDir/$SqHName"
+	else
+		echo "$homeDir/.sqlite_history not found" >> "$destFile"	
+	fi
+}
+
+# called by loop_home_dirs
+function ssh_info () {
+	space
+	# transform name of home dir - replace "/" with "_"
+	homeDirSlashReplace="$(echo "$1" | sed -r 's/[/]+/_/g')"
+	if [ -f "$homeDir/.ssh/known_hosts" ] ; then
+		echo "Copying contents of $homeDir/.ssh/known_hosts $destFile" >> "$destFile"
+		section_header "SSH INFO"
+		space
+		echo "$homeDirSlashReplace"
+		echo "$(cat "$homeDir/.ssh/known_hosts")" >> "$destFile"
+		space
+	else
+		echo "$homeDir/.ssh/known_hosts file not found" >> "$destFile"
+	fi
+}
+
+# calls shell history and ssh info functions
+function loop_home_dirs {
 	# make array of possible home directories
 	HomeDirArray=()
 	HomeDirArray+=($(getent passwd | cut -d: -f6))
@@ -154,40 +235,14 @@ function cp_bash_history {
 	do
 		homeDir="${HomeDirArray[$i]}"
 		
-		if [ -f "$homeDir/.bash_history" ] ; then
-			echo "Copying $homeDir/.bash_history to $bhDir" >> "$destFile"
-			
-			# transform name of home dir - replace "/" with "_"
-			homeDirSlashReplace="$(echo "$homeDir" | sed -r 's/[/]+/_/g')"
-			BHName="BASH_HISTORY$homeDirSlashReplace.txt"
-			
-			cp "$homeDir/.bash_history" "$bhDir/$BHName"
-	
-		fi
-		space
-		
-		# collect python history
-		if [ -f "$homeDir/.python_history" ] ; then
-			echo "Copying $homeDir/.python_history to $bhDir" >> "$destFile"
-			
-			# transform name of home dir - replace "/" with "_"
-			homeDirSlashReplace="$(echo "$homeDir" | sed -r 's/[/]+/_/g')"
-			PHName="PYTHON_HISTORY$homeDirSlashReplace.txt"
-			
-			cp "$homeDir/.python_history" "$bhDir/$PHName"
-		
-		fi
+		# pass homeDir into shell history and ssh info functions
+		cp_shell_history "$homeDir"
+		ssh_info "$homeDir"
 	done
-		
-	# cp root bash history if it exists
-	if [ -f /root/.bash_history ] ; then
-		echo "Copying /root/.bash_history to $bhDir/BASH_HISTORY_root.txt"
-		cp /root/.bash_history "$bhDir/BASH_HISTORY_root.txt"
-	else
-		echo "No Root Bash History" >> "$destFile"
-	fi	
 	space
+	
 }
+
 
 function process_list {
 	echo "$(ps axjf)" >> "$resultsDir/$(date +%y-%m-%d_%H-%M-%S)_PS_tree.txt"
@@ -264,6 +319,7 @@ function tar_results {
 ### SCRIPT
 declare_script
 check_user
+check_sus_file_exists "$1"
 
 mk_results_dir "$1"
 
@@ -280,7 +336,8 @@ recent_logins
 
 # general information collection
 process_list
-cp_bash_history
+root_bash_history
+loop_home_dirs
 cp_syslog
 cp_ufw_log
 cp_auth_log
