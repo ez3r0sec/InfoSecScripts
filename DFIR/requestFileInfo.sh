@@ -1,7 +1,7 @@
 #!/bin/bash
 # requestFileInfo.sh
 # collect information about a specified file (Linux)
-# Last Edited: 06/10/2021 Julian Thies
+# Last Edited: 06/15/2021 Julian Thies
 # 
 # use to get information about a suspicious file on a Linux system
 # tested on Ubuntu
@@ -162,7 +162,20 @@ function cp_bash_history {
 			BHName="BASH_HISTORY$homeDirSlashReplace.txt"
 			
 			cp "$homeDir/.bash_history" "$bhDir/$BHName"
-
+	
+		fi
+		space
+		
+		# collect python history
+		if [ -f "$homeDir/.python_history" ] ; then
+			echo "Copying $homeDir/.python_history to $bhDir" >> "$destFile"
+			
+			# transform name of home dir - replace "/" with "_"
+			homeDirSlashReplace="$(echo "$homeDir" | sed -r 's/[/]+/_/g')"
+			PHName="PYTHON_HISTORY$homeDirSlashReplace.txt"
+			
+			cp "$homeDir/.python_history" "$bhDir/$PHName"
+		
 		fi
 	done
 		
@@ -242,6 +255,7 @@ function cp_auth_log {
 function tar_results {
 	section_header "TAR CREATION"
 	echo "Generating tar.gz archive of results"
+	echo
 	cd $(pwd)
 	tar -czvf "$resultsArchiveName.tar.gz" --hard-dereference --dereference "$resultsDir" 2>&1 "$destFile"
 }
